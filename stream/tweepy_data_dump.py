@@ -8,7 +8,7 @@ consumer_key = "Fill in Consumer Key"
 consumer_secret = "Fill in Consumer Secret"
 
 
-class MyStreamListener(tweepy.StreamListener):
+class DataDumpStreamListener(tweepy.StreamListener):
     def on_status(self, status):
         try:
             self.process(status._json)
@@ -51,10 +51,10 @@ class MyStreamListener(tweepy.StreamListener):
 
 
 if __name__ == '__main__':
-    myStreamListener = MyStreamListener()
+    ddStreamListener = DataDumpStreamListener()
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
-    myStream = tweepy.Stream(auth, myStreamListener)
+    ddStream = tweepy.Stream(auth, ddStreamListener)
     keywords = ["music", "food", "sport", "show", "movie", "car", "commercial", "party", "war", "hello"]
     locations = [-180,-90,180,90]
-    myStream.filter(track=keywords, locations=locations)
+    ddStream.filter(track=keywords, locations=locations)
