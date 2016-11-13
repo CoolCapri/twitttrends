@@ -11,8 +11,8 @@ from es.esearch import ESearch
 application = Flask(__name__, instance_relative_config=True)
 # Load default configuration from config.py
 application.config.from_object('config')
-# Load custom configuration (e.g. creds) from instance/config.py
-application.config.from_pyfile('config.py')
+# (Optionally) Load custom configuration (e.g. creds) from instance/config.py
+application.config.from_pyfile('config.py', silent=True)
 
 # pre-load fixed tweets
 def pre_load_fixed_data():
