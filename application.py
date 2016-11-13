@@ -1,10 +1,7 @@
-from flask import Flask
-from flask import jsonify
-from flask import render_template
-from flask import send_file
-
+from flask import Flask, jsonify, render_template, send_file, request
 from util.read_data import DataReader
 from es.esearch import ESearch
+import json
 
 # Set up the application
 # EB looks for an 'application' callable by default.
@@ -53,6 +50,22 @@ def search(keyword=None):
 @application.route('/images/<filename>')
 def get_image(filename=None):
     return send_file('static/img/'+filename, mimetype='image/png')
+
+@application.route('/addtweet', methods = ['GET', 'POST', 'PUT'])
+def add_tweet(filename=None):
+    header = request.headers.get('x-amz-sns-message-type')
+    try:
+        data = json.loads(request.data)
+    except:
+        pass
+    if header == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
+        url = data['SubscribeURL']
+        print "Subscribed to SNS: " + url
+        return "Subscribed to SNS: " + url
+    if header == 'Notification':
+        print data['Message']
+        return data['Message']
+    return "ok"
 
 # run the app.
 if __name__ == "__main__":
