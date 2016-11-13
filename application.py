@@ -6,9 +6,12 @@ from flask import send_file
 from util.read_data import DataReader
 from es.esearch import ESearch
 
+# Set up the application
 # EB looks for an 'application' callable by default.
 application = Flask(__name__, instance_relative_config=True)
-# read creds from instance/config.py
+# Load default configuration from config.py
+application.config.from_object('config')
+# Load custom configuration (e.g. creds) from instance/config.py
 application.config.from_pyfile('config.py')
 
 # pre-load fixed tweets
@@ -18,7 +21,6 @@ def pre_load_fixed_data():
     return data.read("static/data/tweets.txt", keywords)
 
 tweets_json = pre_load_fixed_data()
-
 esearch = ESearch()
 
 @application.route('/')
@@ -56,5 +58,4 @@ def get_image(filename=None):
 if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
-    application.debug = True
     application.run()
