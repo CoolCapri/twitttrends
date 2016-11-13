@@ -1,18 +1,16 @@
 import tweepy
-import boto.sqs
-from boto.sqs.message import Message
+import boto3
 import json
 
 #Variables that contains the user credentials to access Twitter API
-access_token = "Fill in Access Token"
-access_token_secret = "Fill in Access Secret"
-consumer_key = "Fill in Consumer Key"
-consumer_secret = "Fill in Consumer Secret"
+access_token = ""
+access_token_secret = ""
+consumer_key = ""
+consumer_secret = ""
 
 class SQSStreamListener(tweepy.StreamListener):
-    conn = boto.sqs.connect_to_region("us-west-2", aws_access_key_id="some_access_key_id", aws_secret_access_key="some_ecret_access_key")
-    # create_queue is actually get_or_create
-    tweet_queue = conn.create_queue('tweet')
+    sqs = boto3.resource('sqs')
+    queue = sqs.get_queue_by_name(QueueName='tweet')
     keywords = ["music", "food", "sport", "show", "movie", "car", "commercial", "party", "war", "hello"]
 
     def on_status(self, status):
@@ -33,7 +31,7 @@ class SQSStreamListener(tweepy.StreamListener):
         content = data['text'].lower()
         print("+++++")
         if any(x in content for x in self.keywords):
-            if (data['coordinates'] is not None) and (('lang' not in data) or (data['lang']=='en')): # data[coordinates] may be null, want to filter it out
+            if (data['coordinates'] is not None) and (data['lang'] == 'en'): # data[coordinates] may be null, want to filter it out
                 print("------")
                 print(data['text'])
                 print(data['coordinates'])
@@ -49,10 +47,8 @@ class SQSStreamListener(tweepy.StreamListener):
                              'timestamp_ms': data['timestamp_ms'],
                              'user_name': data['user']['name'],
                              'user_screen_name': data['user']['screen_name']}
-                tweet_json = json.loads(json.dumps(tweet_dict))
-                m = Message()
-                m.set_body(tweet_json)
-                self.tweet_queue.write(m)
+                tweet_json = json.dumps(tweet_dict)
+                response = self.queue.send_message(MessageBody=tweet_json)
 
 
 if __name__ == '__main__':
