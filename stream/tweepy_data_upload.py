@@ -1,15 +1,24 @@
 import tweepy
 import json
+import ConfigParser
+import os
 from elasticsearch import Elasticsearch
 
-#Variables that contains the user credentials to access Twitter API
-access_token = "Fill in Access Token"
-access_token_secret = "Fill in Access Secret"
-consumer_key = "Fill in Consumer Key"
-consumer_secret = "Fill in Consumer Secret"
+
+conf_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'conf', 'config.txt')
+configParser = ConfigParser.RawConfigParser()
+configParser.read(conf_file)
+
+access_token = configParser.get('TWITTER', 'ACCESS_TOKEN')
+access_token_secret = configParser.get('TWITTER', 'ACCESS_TOKEN_SECRET')
+consumer_key = configParser.get('TWITTER', 'CONSUMER_KEY')
+consumer_secret = configParser.get('TWITTER', 'CONSUMER_SECRET')
+
+es_host = configParser.get('ES', 'HOST')
+es_port = configParser.get('ES', 'PORT')
 
 class DataUploadStreamListener(tweepy.StreamListener):
-    es = Elasticsearch([{'host': 'somehost.es.amazonaws.com', 'port': 80}])
+    es = Elasticsearch([{'host': es_host, 'port': es_port}])
 
     def on_status(self, status):
         try:

@@ -1,12 +1,18 @@
 import tweepy
 import boto3
 import json
+import ConfigParser
+import os
 
-#Variables that contains the user credentials to access Twitter API
-access_token = ""
-access_token_secret = ""
-consumer_key = ""
-consumer_secret = ""
+
+conf_file = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'conf', 'config.txt')
+configParser = ConfigParser.RawConfigParser()
+configParser.read(conf_file)
+
+access_token = configParser.get('TWITTER', 'ACCESS_TOKEN')
+access_token_secret = configParser.get('TWITTER', 'ACCESS_TOKEN_SECRET')
+consumer_key = configParser.get('TWITTER', 'CONSUMER_KEY')
+consumer_secret = configParser.get('TWITTER', 'CONSUMER_SECRET')
 
 class SQSStreamListener(tweepy.StreamListener):
     sqs = boto3.resource('sqs')
