@@ -49,7 +49,7 @@ def add_tweet(filename=None):
         return "Subscribed to SNS: " + url
     if header == 'Notification':
         print data['Message']
-        search_result = esearch.upload(request.data)
+        search_result = esearch.upload(data['Message'])
         return data['Message']
     return "ok"
 
