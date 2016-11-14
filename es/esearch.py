@@ -22,3 +22,8 @@ class ESearch():
             tweets.append(es_result["_source"])
         tweets_of_keyword = {keyword: tweets}
         return tweets_of_keyword
+
+    def upload(self, data_json): {
+        print
+        self.es.index(index='tweet', doc_type='tweet_data', body=json.loads(json.dumps(data)))
+    }

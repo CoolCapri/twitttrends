@@ -39,7 +39,7 @@ class DataUploadStreamListener(tweepy.StreamListener):
         content = data['text'].lower()
         print("+++++")
         if any(x in content for x in keywords):
-            if (data['coordinates'] is not None) and (('lang' not in data) or (data['lang']=='en')): # data[coordinates] may be null, want to filter it out
+            if (data['coordinates'] is not None) and (data['lang']=='en'): # data[coordinates] may be null, want to filter it out
                 print("------")
                 print(data['text'])
                 print(data['coordinates'])

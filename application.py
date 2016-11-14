@@ -21,17 +21,7 @@ esearch = ESearch()
 def index():
     return render_template('index.html')
 
-@application.route('/searchf/')
-@application.route('/searchf/<keyword>')
-def searchf(keyword=None):
-    if keyword is None:
-        to_return = jsonify(**tweets_json)
-    else:
-        tweets_of_keyword = {keyword: []}
-        if keyword in tweets_json:
-            tweets_of_keyword = {keyword: tweets_json[keyword]}
-        to_return = jsonify(**tweets_of_keyword)
-    return to_return
+
 
 @application.route('/search/')
 @application.route('/search/<keyword>')
@@ -44,9 +34,7 @@ def search(keyword=None):
         to_return = jsonify(**search_result)
     return to_return
 
-@application.route('/images/<filename>')
-def get_image(filename=None):
-    return send_file('static/img/'+filename, mimetype='image/png')
+
 
 @application.route('/addtweet', methods = ['GET', 'POST', 'PUT'])
 def add_tweet(filename=None):
@@ -61,8 +49,26 @@ def add_tweet(filename=None):
         return "Subscribed to SNS: " + url
     if header == 'Notification':
         print data['Message']
+        search_result = esearch.upload(request.data)
         return data['Message']
     return "ok"
+
+
+@application.route('/searchf/')
+@application.route('/searchf/<keyword>')
+def searchf(keyword=None):
+    if keyword is None:
+        to_return = jsonify(**tweets_json)
+    else:
+        tweets_of_keyword = {keyword: []}
+        if keyword in tweets_json:
+            tweets_of_keyword = {keyword: tweets_json[keyword]}
+        to_return = jsonify(**tweets_of_keyword)
+    return to_return
+
+@application.route('/images/<filename>')
+def get_image(filename=None):
+    return send_file('static/img/'+filename, mimetype='image/png')
 
 # run the app.
 if __name__ == "__main__":
