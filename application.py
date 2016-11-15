@@ -38,13 +38,13 @@ def search(keyword=None):
 
 
 @application.route('/addtweet', methods = ['GET', 'POST', 'PUT'])
-def add_tweet(filename=None):
+def add_tweet():
     header = request.headers.get('x-amz-sns-message-type')
     try:
         data = json.loads(request.data)
     except:
         pass
-    if header == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
+    if header == 'SubscriptionConfirmation' and 'SubscribeURL' in data:
         url = data['SubscribeURL']
         response = requests.get(url)
         print "Subscribed to SNS: " + url
