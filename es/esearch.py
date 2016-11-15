@@ -25,5 +25,4 @@ class ESearch():
 
     def upload(self, data_json):
         print data_json
-        self.es.index(index='tweet', doc_type='tweet_data', body=json.loads(json.dumps(data)))
-    
+        self.es.index(index='tweet', doc_type='tweet_data', body=json.loads(data_json))
