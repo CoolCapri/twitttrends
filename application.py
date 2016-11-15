@@ -2,6 +2,7 @@ from flask import Flask, jsonify, render_template, send_file, request
 from util.read_data import DataReader
 from es.esearch import ESearch
 import json
+import requests
 
 
 # Set up the application
@@ -45,6 +46,7 @@ def add_tweet(filename=None):
         pass
     if header == 'SubscriptionConfirmation' and 'SubscribeURL' in js:
         url = data['SubscribeURL']
+        response = requests.get(url)
         print "Subscribed to SNS: " + url
         return "Subscribed to SNS: " + url
     if header == 'Notification':
