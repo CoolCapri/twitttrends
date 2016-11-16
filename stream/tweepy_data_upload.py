@@ -18,7 +18,9 @@ es_host = configParser.get('ES', 'HOST')
 es_port = configParser.get('ES', 'PORT')
 
 class DataUploadStreamListener(tweepy.StreamListener):
-    es = Elasticsearch([{'host': es_host, 'port': es_port}])
+    def __init__(self, es_host, es_port):
+        super(DataUploadStreamListener, self).__init__()
+        self.es = Elasticsearch([{'host': es_host, 'port': es_port}])
 
     def on_status(self, status):
         try:
@@ -59,7 +61,7 @@ class DataUploadStreamListener(tweepy.StreamListener):
 
 
 if __name__ == '__main__':
-    duStreamListener = DataUploadStreamListener()
+    duStreamListener = DataUploadStreamListener(es_host, es_port)
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     duStream = tweepy.Stream(auth, duStreamListener)

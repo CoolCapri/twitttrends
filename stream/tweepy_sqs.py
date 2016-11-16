@@ -15,9 +15,12 @@ consumer_key = configParser.get('TWITTER', 'CONSUMER_KEY')
 consumer_secret = configParser.get('TWITTER', 'CONSUMER_SECRET')
 
 class SQSStreamListener(tweepy.StreamListener):
-    sqs = boto3.resource('sqs')
-    queue = sqs.get_queue_by_name(QueueName='tweet')
     keywords = ["music", "food", "sport", "show", "movie", "car", "commercial", "party", "war", "hello"]
+
+    def __init__(self):
+        super(SQSStreamListener, self).__init__()
+        sqs = boto3.resource('sqs')
+        self.queue = sqs.get_queue_by_name(QueueName='tweet')
 
     def on_status(self, status):
         try:
