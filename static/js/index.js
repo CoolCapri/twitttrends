@@ -1,7 +1,50 @@
+// DOM Management
 $( document ).ready(function() {
-    $('#searchbuttonid').on('click', searchKeyword);
+    $('#searchButton').on('click', keywordSearch);
 });
 
+function keywordSearch(){
+  var keyword = $('#searchBox').val();
+  httpGetAsync("search/", keyword);
+}
+
+function dropdownListSearch(keyword){
+  httpGetAsync("search/", keyword);
+}
+
+function toggleDropdownList() {
+  $("#dropdownListDiv")[0].classList.toggle("show");
+}
+
+
+function foldTile() {
+  var foldButtonDiv = $('#foldButtonDiv')[0];
+  $('#searchDiv').toggle(500);
+  $('#titleDiv').toggle(500);
+  if (foldButtonDiv.innerHTML == "+") {
+    foldButtonDiv.innerHTML = "\u2212";
+  } else {
+    foldButtonDiv.innerHTML = "+";
+  }
+}
+
+
+// Close the dropdown menu if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+
+    var dropdowns = $(".dropdownContent")
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+
+// Google Map
 var ourMap;
 var markerClusterer = null;
 var coordinates_lat = [];
@@ -13,14 +56,6 @@ var tweets = [];
 var markers = [];
 var prev_infowindow = null;
 
-function searchKeyword(){
-  var keyword = $('#serachbox').val();
-  httpGetAsync("search/", keyword);
-}
-
-function searchKeyword2(keyword){
-  httpGetAsync("search/", keyword);
-}
 
 function initMap() {
 	var myLatLng = {
@@ -60,7 +95,7 @@ function httpGetAsync(theUrl, keyword) {
 
 function processJsonResult(result, keyword) {
   var tweets_list = result[keyword];
-  if (tweets_list == null) {
+  if (tweets_list == null || tweets_list.length == 0) {
     alert("No results found");
     return;
   }
@@ -114,27 +149,6 @@ function bindInfoWindow(marker, map, infowindow, html) {
         infowindow.setContent(html);
         infowindow.open(map, this);
     });
-}
-
-function myFunction2() {
-	document.getElementById("myDropdown2").classList.toggle("show");
-}
-
-
-
-function filterFunction() {
-	var input, filter, ul, li, a, i;
-	input = document.getElementById("myInput");
-	filter = input.value.toUpperCase();
-	div = document.getElementById("myDropdown");
-	a = div.getElementsByTagName("a");
-	for (i = 0; i < a.length; i++) {
-		if (a[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
-			a[i].style.display = "";
-		} else {
-			a[i].style.display = "none";
-		}
-	}
 }
 
 // Sets the map on all markers in the array.

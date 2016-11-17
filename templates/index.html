@@ -7,30 +7,34 @@
 		<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/index.css') }}">
 	</head>
 	<body>
-		<div id="tfheader">
-			<div id="tfkeywordsearch">
-				<input type="text" class="tftextinput" name="query" id="serachbox" size="21" maxlength="120"><input type="submit" value="search" class="tfbutton" id="searchbuttonid">
+		<div id="topDiv">
+			<div id="foldButtonDiv" onclick="foldTile()">&#8722;</div>
+			<div id="titleDiv"><h1 id="title">TwittTrends</h1></div>
+			<div id="searchDiv">
+				<input type="text" id="searchBox" name="query" placeholder="Type a keyword to search..." maxlength="30">
+				<input type="submit" id="searchButton" value="Search">
+				<div class="dropdownDiv">
+					<button onclick="toggleDropdownList()" class="dropbtn">Keyword List</button>
+					<div id="dropdownListDiv" class="dropdownContent">
+						<a href="#" onclick="dropdownListSearch('movie')">movie</a>
+						<a href="#" onclick="dropdownListSearch('commercial')">commercial</a>
+						<a href="#" onclick="dropdownListSearch('car')">car</a>
+						<a href="#" onclick="dropdownListSearch('music')">music</a>
+						<a href="#" onclick="dropdownListSearch('food')">food</a>
+						<a href="#" onclick="dropdownListSearch('sport')">sport</a>
+						<a href="#" onclick="dropdownListSearch('party')">party</a>
+					</div>
+				</div>
 			</div>
-			<div class="tfclear"></div>
 		</div>
-		<div class="dropdown">
-			<button onclick="myFunction2()" class="dropbtn">Keyword List</button>
-			<div id="myDropdown2" class="dropdown-content">
-				<button onclick="searchKeyword2('movie')">movie</button>
-				<button onclick="searchKeyword2('commercial')">commercial</button>
-				<button onclick="searchKeyword2('car')">car</button>
-				<button onclick="searchKeyword2('music')">music</button>
-				<button onclick="searchKeyword2('food')">food</button>
-				<button onclick="searchKeyword2('sport')">sport</button>
-				<button onclick="searchKeyword2('party')">party</button>
-			</div>
-		</div>
+
 		<div id="map"></div>
+
 		<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.1.1.min.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static', filename='js/index.js') }}"></script>
 		<script type="text/javascript" src="{{ url_for('static', filename='js/markerclusterer.js') }}"></script>
 		<script async defer
-			    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrGPpkeV09Rd8NQAveY9pUhX9_hK54X40&signed_in=true&callback=initMap">
+			    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrGPpkeV09Rd8NQAveY9pUhX9_hK54X40&callback=initMap">
 		</script>
 
 	</body>
