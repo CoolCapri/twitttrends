@@ -141,8 +141,7 @@ function generateMarkers() {
     var yellowMarkerIcon = 'images/pin-yellow.png';
 
     var marker = new google.maps.Marker({
-  		position: location,
-  		title: 'Hello World!'
+  		position: location
   	});
 
     var sentiment = sentiments[i]
@@ -207,9 +206,10 @@ function addMarker(tweet) {
   userScreenNames.push(tweet.user_screen_name);
   sentiments.push(tweet.sentiment);
 
+  // BE CAREFUL: the lat and lng are different in map and tweeter
   var location = {
-    lat: parseFloat(tweet.coordinates[0]),
-    lng: parseFloat(tweet.coordinates[1])
+    lat: parseFloat(tweet.coordinates[1]),
+    lng: parseFloat(tweet.coordinates[0])
   };
 
   var contentString = '<div id="content">'+
@@ -223,8 +223,7 @@ function addMarker(tweet) {
   var yellowMarkerIcon = 'images/pin-yellow.png';
 
   var marker = new google.maps.Marker({
-    position: location,
-    title: 'Hello World!'
+    position: {location}
   });
 
   var sentiment = tweet.sentiment;
@@ -239,10 +238,7 @@ function addMarker(tweet) {
   var infowindow = new google.maps.InfoWindow();
   bindInfoWindow(marker, ourMap, infowindow, contentString);
   markers.push(marker);
-  alert("add marker");
-  markerClusterer.clearMarkers();
-  alert("add markers 2");
-  markerClusterer.addMarkers(markers);
+  markerClusterer.addMarker(marker);
 }
 
 function startTweetUpdateSse() {
