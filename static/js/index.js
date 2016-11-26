@@ -52,15 +52,15 @@ window.onclick = function(event) {
 // Google Map
 var ourMap;
 var markerClusterer = null;
-var coordinates_lat = [];
-var coordinates_lng = [];
-var created_at = [];
+var coordinatesLat = [];
+var coordinatesLng = [];
+var createdAt = [];
 var userNames = [];
 var userScreenNames = [];
 var tweets = [];
 var sentiments = [];
 var markers = [];
-var prev_infowindow = null;
+var prevInfowindow = null;
 
 
 function initMap() {
@@ -82,13 +82,13 @@ function initMap() {
 
 function resetVariables(){
   currentKeyword = null;
-  coordinates_lat = [];
-  coordinates_lng = [];
-  created_at = [];
+  coordinatesLat = [];
+  coordinatesLng = [];
+  createdAt = [];
   tweets = [];
   userNames = [];
   userScreenNames = [];
-  prev_infowindow = null;
+  prevInfowindow = null;
   deleteMarkers();
   markerClusterer.clearMarkers();
 }
@@ -111,11 +111,11 @@ function processJsonResult(result, keyword) {
 
   for (var i = 0; i < tweets_list.length; i++) {
       var tweet = tweets_list[i];
-      coordinates_lng.push(tweet.coordinates[0]);
-      coordinates_lat.push(tweet.coordinates[1]);
-      created_at.push(tweet.created_at);
+      coordinatesLng.push(tweet.coordinates[0]);
+      coordinatesLat.push(tweet.coordinates[1]);
+      createdAt.push(tweet.created_at);
       tweets.push(tweet.text);
-      created_at.push(tweet.created_at);
+      createdAt.push(tweet.created_at);
       userNames.push(tweet.user_name);
       userScreenNames.push(tweet.user_screen_name);
       sentiments.push(tweet.sentiment);
@@ -126,14 +126,14 @@ function processJsonResult(result, keyword) {
 function generateMarkers() {
   for (var i = 0; i < tweets.length; i++) {
     var location = {
-      lat: parseFloat(coordinates_lat[i]),
-      lng: parseFloat(coordinates_lng[i])
+      lat: parseFloat(coordinatesLat[i]),
+      lng: parseFloat(coordinatesLng[i])
     };
 
     var contentString = '<div id="content">'+
             "<h3>" + userNames[i] + " (@" + userScreenNames[i] + ")" + "</h3>" +
             "<p>" + tweets[i] + "</p>" +
-            "<p>" + "Created At: " + created_at[i] + "</p>" +
+            "<p>" + "Created At: " + createdAt[i] + "</p>" +
             "</div>";
 
     var redMarkerIcon = 'images/pin-red.png';
@@ -162,10 +162,10 @@ function generateMarkers() {
 
 function bindInfoWindow(marker, map, infowindow, html) {
     marker.addListener('click', function() {
-        if( prev_infowindow != null ) {
-            prev_infowindow.close();
+        if( prevInfowindow != null ) {
+            prevInfowindow.close();
         }
-        prev_infowindow = infowindow;
+        prevInfowindow = infowindow;
         infowindow.setContent(html);
         infowindow.open(map, this);
     });
@@ -197,11 +197,11 @@ function deleteMarkers() {
 
 // Event Source
 function addMarker(tweet) {
-  coordinates_lng.push(tweet.coordinates[0]);
-  coordinates_lat.push(tweet.coordinates[1]);
-  created_at.push(tweet.created_at);
+  coordinatesLng.push(tweet.coordinates[0]);
+  coordinatesLat.push(tweet.coordinates[1]);
+  createdAt.push(tweet.created_at);
   tweets.push(tweet.text);
-  created_at.push(tweet.created_at);
+  createdAt.push(tweet.created_at);
   userNames.push(tweet.user_name);
   userScreenNames.push(tweet.user_screen_name);
   sentiments.push(tweet.sentiment);
@@ -223,7 +223,7 @@ function addMarker(tweet) {
   var yellowMarkerIcon = 'images/pin-yellow.png';
 
   var marker = new google.maps.Marker({
-    position: {location}
+    position: location
   });
 
   var sentiment = tweet.sentiment;
