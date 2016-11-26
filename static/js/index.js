@@ -198,7 +198,6 @@ function deleteMarkers() {
 
 // Event Source
 function addMarker(tweet) {
-  alert("in addMarker")
   coordinates_lng.push(tweet.coordinates[0]);
   coordinates_lat.push(tweet.coordinates[1]);
   created_at.push(tweet.created_at);
@@ -240,7 +239,8 @@ function addMarker(tweet) {
   var infowindow = new google.maps.InfoWindow();
   bindInfoWindow(marker, ourMap, infowindow, contentString);
   markers.push(marker);
-  markerClusterer.addMarker(marker);
+  markerClusterer.clearMarkers();
+  markerClusterer.addMarkers(markers);
 }
 
 function startTweetUpdateSse() {
@@ -251,8 +251,6 @@ function startTweetUpdateSse() {
       $('#updateNum')[0].innerHTML = newTweetsSinceStarted;
       if (currentKeyword != null) {
         tweetJson = JSON.parse(e.data);
-        alert(tweetJson.text)
-        alert(currentKeyword)
         if (tweetJson.text.includes(currentKeyword)) {
           addMarker(tweetJson);
         }
