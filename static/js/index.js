@@ -198,6 +198,7 @@ function deleteMarkers() {
 
 // Event Source
 function addMarker(tweet) {
+  alert("in addMarker")
   coordinates_lng.push(tweet.coordinates[0]);
   coordinates_lat.push(tweet.coordinates[1]);
   created_at.push(tweet.created_at);
@@ -245,12 +246,13 @@ function addMarker(tweet) {
 function startTweetUpdateSse() {
   var source = new EventSource('/newtweetupdate/');
   source.onmessage = function(e) {
-    jsonData = e.data;
-    if ((e.data != "nothing")) {
+    if (e.data != "nothing") {
       newTweetsSinceStarted = newTweetsSinceStarted + 1;
       $('#updateNum')[0].innerHTML = newTweetsSinceStarted;
       if (currentKeyword != null) {
         tweetJson = JSON.parse(e.data);
+        alert(tweetJson.text)
+        alert(currentKeyword)
         if (tweetJson.text.includes(currentKeyword)) {
           addMarker(tweetJson);
         }
