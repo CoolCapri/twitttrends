@@ -239,8 +239,9 @@ function addMarker(tweet) {
   var infowindow = new google.maps.InfoWindow();
   bindInfoWindow(marker, ourMap, infowindow, contentString);
   markers.push(marker);
+  alert("add marker");
   markerClusterer.clearMarkers();
-  markerClusterer.addMarkers(markers);
+  //markerClusterer.addMarkers(markers);
 }
 
 function startTweetUpdateSse() {
