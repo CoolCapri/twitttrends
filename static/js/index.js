@@ -144,7 +144,7 @@ function generateMarkers() {
   		position: location
   	});
 
-    var sentiment = sentiments[i]
+    var sentiment = sentiments[i];
     if (sentiment == 'positive') {
       marker.setIcon(redMarkerIcon);
     } else if (sentiment == 'negative') {
