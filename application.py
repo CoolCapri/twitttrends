@@ -80,10 +80,10 @@ def new_tweet_update():
         while True:
             if len(new_tweets) > 0:
                 new_tweet = new_tweets.pop(0)
-                yield "data: A new tweet streamed: " + new_tweet + "\n\n"
-                print "yielded: new_tweet"
+                yield "data: " + new_tweet + "\n\n"
+                print "yielded: " + new_tweet
             else:
-                yield "data: yielded nothing \n\n"
+                yield "data: nothing\n\n"
                 print "yielded: nothing"
             time.sleep(1)
 

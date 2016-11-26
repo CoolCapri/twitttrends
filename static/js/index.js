@@ -4,6 +4,10 @@ $( document ).ready(function() {
     startTweetUpdateSse()
 });
 
+// Global variables:
+var currentKeyword = null;
+var newTweetsSinceStarted = 0;
+
 function keywordSearch(){
   var keyword = $('#searchBox').val();
   httpGetAsync("search/", keyword);
@@ -33,7 +37,6 @@ function foldTile() {
 // Close the dropdown menu if the user clicks outside of it
 window.onclick = function(event) {
   if (!event.target.matches('.dropbtn')) {
-
     var dropdowns = $(".dropdownContent")
     var i;
     for (i = 0; i < dropdowns.length; i++) {
@@ -45,15 +48,6 @@ window.onclick = function(event) {
   }
 }
 
-// Event Source
-function startTweetUpdateSse() {
-  var source = new EventSource('/newtweetupdate/');
-  var num_message_since_started = 0
-  source.onmessage = function(e) {
-    num_message_since_started = num_message_since_started + 1
-    $('#updateNum')[0].innerHTML = num_message_since_started;
-  };
-}
 
 // Google Map
 var ourMap;
@@ -87,6 +81,7 @@ function initMap() {
 }
 
 function resetVariables(){
+  currentKeyword = null;
   coordinates_lat = [];
   coordinates_lng = [];
   created_at = [];
@@ -99,11 +94,13 @@ function resetVariables(){
 }
 //handle the search part
 function httpGetAsync(theUrl, keyword) {
-  resetVariables()
+  resetVariables();
+  currentKeyword = keyword;
   $.getJSON(theUrl + keyword, function(result){
       processJsonResult(result, keyword);
   });
 }
+
 
 function processJsonResult(result, keyword) {
   var tweets_list = result[keyword];
@@ -145,26 +142,23 @@ function generateMarkers() {
 
     var marker = new google.maps.Marker({
   		position: location,
-  		title: 'Hello World!',
+  		title: 'Hello World!'
   	});
 
     var sentiment = sentiments[i]
     if (sentiment == 'positive') {
-      marker.setIcon(redMarkerIcon)
+      marker.setIcon(redMarkerIcon);
     } else if (sentiment == 'negative') {
-      marker.setIcon(greenMarkerIcon)
+      marker.setIcon(greenMarkerIcon);
     } else {
-      marker.setIcon(yellowMarkerIcon)
+      marker.setIcon(yellowMarkerIcon);
     }
 
     var infowindow = new google.maps.InfoWindow();
     bindInfoWindow(marker, ourMap, infowindow, contentString);
-    // marker.addListener('click', function() {
-    //   infowindow.open(ourMap, this);
-    // });
     markers.push(marker);
   }
-  markerClusterer.addMarkers(markers)
+  markerClusterer.addMarkers(markers);
 }
 
 function bindInfoWindow(marker, map, infowindow, html) {
@@ -199,4 +193,68 @@ function showMarkers() {
 function deleteMarkers() {
   clearMarkers();
   markers = [];
+}
+
+
+// Event Source
+function addMarker(tweet) {
+  coordinates_lng.push(tweet.coordinates[0]);
+  coordinates_lat.push(tweet.coordinates[1]);
+  created_at.push(tweet.created_at);
+  tweets.push(tweet.text);
+  created_at.push(tweet.created_at);
+  userNames.push(tweet.user_name);
+  userScreenNames.push(tweet.user_screen_name);
+  sentiments.push(tweet.sentiment);
+
+  var location = {
+    lat: parseFloat(tweet.coordinates[0]),
+    lng: parseFloat(tweet.coordinates[1])
+  };
+
+  var contentString = '<div id="content">'+
+          "<h3>" + tweet.user_name + " (@" + tweet.user_screen_name + ")" + "</h3>" +
+          "<p>" + tweet.text + "</p>" +
+          "<p>" + "Created At: " + tweet.created_at + "</p>" +
+          "</div>";
+
+  var redMarkerIcon = 'images/pin-red.png';
+  var greenMarkerIcon = 'images/pin-green.png';
+  var yellowMarkerIcon = 'images/pin-yellow.png';
+
+  var marker = new google.maps.Marker({
+    position: location,
+    title: 'Hello World!'
+  });
+
+  var sentiment = tweet.sentiment;
+  if (sentiment == 'positive') {
+    marker.setIcon(redMarkerIcon);
+  } else if (sentiment == 'negative') {
+    marker.setIcon(greenMarkerIcon);
+  } else {
+    marker.setIcon(yellowMarkerIcon);
+  }
+
+  var infowindow = new google.maps.InfoWindow();
+  bindInfoWindow(marker, ourMap, infowindow, contentString);
+  markers.push(marker);
+  markerClusterer.addMarker(marker);
+}
+
+function startTweetUpdateSse() {
+  var source = new EventSource('/newtweetupdate/');
+  source.onmessage = function(e) {
+    jsonData = e.data;
+    if ((e.data != "nothing")) {
+      newTweetsSinceStarted = newTweetsSinceStarted + 1;
+      $('#updateNum')[0].innerHTML = newTweetsSinceStarted;
+      if (currentKeyword != null) {
+        tweetJson = JSON.parse(e.data);
+        if (tweetJson.text.includes(currentKeyword)) {
+          addMarker(tweetJson);
+        }
+      }
+    }
+  };
 }
