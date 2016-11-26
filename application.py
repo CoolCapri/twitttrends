@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, render_template, send_file, request
+from flask import Flask, jsonify, render_template, send_file, request, Response
 from util.read_data import DataReader
 from es.esearch import ESearch
 import json
 import requests
+import time
 
 
 # Set up the application
@@ -18,11 +19,11 @@ def pre_load_fixed_data():
 tweets_json = pre_load_fixed_data()
 esearch = ESearch()
 
+new_tweets = []
+
 @application.route('/')
 def index():
     return render_template('index.html')
-
-
 
 @application.route('/search/')
 @application.route('/search/<keyword>')
@@ -52,6 +53,7 @@ def add_tweet():
     if header == 'Notification':
         print data['Message']
         search_result = esearch.upload(data['Message'])
+        new_tweets.append(data['Message'])
         return data['Message']
     return "ok"
 
@@ -72,9 +74,24 @@ def searchf(keyword=None):
 def get_image(filename=None):
     return send_file('static/img/'+filename, mimetype='image/png')
 
+@application.route('/newtweetupdate/', methods=['GET', 'POST'])
+def new_tweet_update():
+    def respgen():
+        while True:
+            if len(new_tweets) > 0:
+                new_tweet = new_tweets.pop(0)
+                yield "data: A new tweet streamed: " + new_tweet + "\n\n"
+                print "yielded: new_tweet"
+            else:
+                yield "data: yielded nothing \n\n"
+                print "yielded: nothing"
+            time.sleep(1)
+
+    return Response(respgen(), mimetype="text/event-stream")
+
 # run the app.
 if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
     application.debug = True
-    application.run()
+    application.run(threaded=True)

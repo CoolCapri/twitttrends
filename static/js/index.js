@@ -1,6 +1,7 @@
 // DOM Management
 $( document ).ready(function() {
     $('#searchButton').on('click', keywordSearch);
+    startTweetUpdateSse()
 });
 
 function keywordSearch(){
@@ -44,6 +45,16 @@ window.onclick = function(event) {
   }
 }
 
+// Event Source
+function startTweetUpdateSse() {
+  var source = new EventSource('/newtweetupdate/');
+  var num_message_since_started = 0
+  source.onmessage = function(e) {
+    num_message_since_started = num_message_since_started + 1
+    $('#updateNum')[0].innerHTML = num_message_since_started;
+  };
+}
+
 // Google Map
 var ourMap;
 var markerClusterer = null;
@@ -53,6 +64,7 @@ var created_at = [];
 var userNames = [];
 var userScreenNames = [];
 var tweets = [];
+var sentiments = [];
 var markers = [];
 var prev_infowindow = null;
 
@@ -109,6 +121,7 @@ function processJsonResult(result, keyword) {
       created_at.push(tweet.created_at);
       userNames.push(tweet.user_name);
       userScreenNames.push(tweet.user_screen_name);
+      sentiments.push(tweet.sentiment);
   }
   generateMarkers();
 }
@@ -126,10 +139,24 @@ function generateMarkers() {
             "<p>" + "Created At: " + created_at[i] + "</p>" +
             "</div>";
 
+    var redMarkerIcon = 'images/pin-red.png';
+    var greenMarkerIcon = 'images/pin-green.png';
+    var yellowMarkerIcon = 'images/pin-yellow.png';
+
     var marker = new google.maps.Marker({
   		position: location,
-  		title: 'Hello World!'
+  		title: 'Hello World!',
   	});
+
+    var sentiment = sentiments[i]
+    if (sentiment == 'positive') {
+      marker.setIcon(redMarkerIcon)
+    } else if (sentiment == 'negative') {
+      marker.setIcon(greenMarkerIcon)
+    } else {
+      marker.setIcon(yellowMarkerIcon)
+    }
+
     var infowindow = new google.maps.InfoWindow();
     bindInfoWindow(marker, ourMap, infowindow, contentString);
     // marker.addListener('click', function() {
