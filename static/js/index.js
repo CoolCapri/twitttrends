@@ -241,7 +241,8 @@ function addMarker(tweet) {
   markers.push(marker);
   alert("add marker");
   markerClusterer.clearMarkers();
-  //markerClusterer.addMarkers(markers);
+  alert("add markers 2");
+  markerClusterer.addMarkers(markers);
 }
 
 function startTweetUpdateSse() {
