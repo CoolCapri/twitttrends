@@ -85,7 +85,7 @@ def new_tweet_update():
             else:
                 yield "data: nothing\n\n"
                 print "yielded: nothing"
-            time.sleep(1)
+            time.sleep(0.5)
 
     return Response(respgen(), mimetype="text/event-stream")
 
