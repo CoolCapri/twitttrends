@@ -3,7 +3,7 @@ Shuo Wang & Jisong Liu
 
 ### Note
 
-Deployed on Elastic Beanstalk, built on Flask web framework. Tweets are streamed using Twitter Streaming API via Tweepy. Other technologies include: SQS, SNS, Server-Sent Event (SSE), EC2
+Deployed on Elastic Beanstalk, built on Flask web framework. Tweets are streamed using Twitter Streaming API via Tweepy. Other technologies include: SQS, SNS, Server-Sent Event (SSE), EC2, etc.
 
 Select keywords from keyword list or type a word to search. Markers of different colors indicate different sentiment (Red: positive, Green: negative, Yellow: neutral).
 
