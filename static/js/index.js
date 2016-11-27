@@ -88,6 +88,7 @@ function resetVariables(){
   tweets = [];
   userNames = [];
   userScreenNames = [];
+  sentiments = [];
   prevInfowindow = null;
   deleteMarkers();
   markerClusterer.clearMarkers();
@@ -238,8 +239,7 @@ function addMarker(tweet) {
   var infowindow = new google.maps.InfoWindow();
   bindInfoWindow(marker, ourMap, infowindow, contentString);
   markers.push(marker);
-  markerClusterer.clearMarkers()
-  markerClusterer.addMarkers(markers);
+  markerClusterer.addMarker(marker);
 }
 
 function startTweetUpdateSse() {
