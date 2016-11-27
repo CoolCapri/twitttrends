@@ -3,7 +3,7 @@ Shuo Wang & Jisong Liu
 
 ### Note
 
-Deployed on Elastic Beanstalk, built on Flask web framework. Tweets are streamed using Twitter Streaming API via Tweepy.
+Deployed on Elastic Beanstalk, built on Flask web framework. Tweets are streamed using Twitter Streaming API via Tweepy. Other technologies include: SQS, SNS, Server-Sent Event (SSE), EC2
 
 Select keywords from keyword list or type a word to search. Markers of different colors indicate different sentiment (Red: positive, Green: negative, Yellow: neutral).
 
@@ -17,4 +17,4 @@ worker/worker_sqs_sns.py get tweets from SQS, does sentiment analysis, and then 
 
 application.py has add_tweet route which add tweet sent by SNS to ElasticSearch system
 
-Front-end will be notified of new tweets and display the new tweets to the map (live update of tweets).
+Web frontend will be notified of new tweets and display the new tweets to the map (live update of tweets).
