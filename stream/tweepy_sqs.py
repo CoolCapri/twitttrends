@@ -15,7 +15,7 @@ consumer_key = configParser.get('TWITTER', 'CONSUMER_KEY')
 consumer_secret = configParser.get('TWITTER', 'CONSUMER_SECRET')
 
 class SQSStreamListener(tweepy.StreamListener):
-    keywords = ["music", "food", "sport", "show", "movie", "car", "commercial", "hello", "love", "like"]
+    keywords = ["music", "food", "sport", "show", "movie", "game", "car", "football", "commercial", "hello", "love", "like"]
 
     def __init__(self):
         super(SQSStreamListener, self).__init__()
@@ -65,6 +65,6 @@ if __name__ == '__main__':
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     sqsStream = tweepy.Stream(auth, sqsStreamListener)
-    keywords = ["music", "food", "sport", "show", "movie", "car", "commercial", "hello", "love", "like"]
+    keywords = ["music", "food", "sport", "show", "movie", "game", "car", "football", "commercial", "hello", "love", "like"]
     locations = [-180,-90,180,90]
     sqsStream.filter(track=keywords, locations=locations)
